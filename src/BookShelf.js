@@ -3,11 +3,6 @@ import { array, func } from 'prop-types';
 import Book from './Book';
 
 class BookShelf extends Component {
-
-  onUpdate = (book, shelf) => {
-    this.props.onHandleUpdate(book, shelf);
-  };
-
   render() {
     const { shelfTitle, books } = this.props;
     return(
@@ -19,7 +14,7 @@ class BookShelf extends Component {
               <Book 
                 key={book.id}
                 book={book}
-                onUpdateShelf={this.onUpdate}
+                onUpdateShelf={this.props.onHandleUpdate}
               />
             ))}
           </ol>

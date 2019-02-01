@@ -1,16 +1,20 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { array, func } from 'prop-types';
 import SearchBooksBar from './SearchBooksBar';
 import SearchBooksContent from './SearchBooksContent';
 
-class SearchBooks extends Component {
-    render() {
-        return(
-          <div className="search-books">
-            <SearchBooksBar/>
-            <SearchBooksContent/>
-          </div>
-        );
-    }
-}
+const SearchBooks = props => {
+  return(
+    <div className="search-books">
+      <SearchBooksBar onSearchQuery={props.onHandleSearch}/>
+      <SearchBooksContent books={props.searchBooks} onUpdate={props.onHandleUpdate}/>
+    </div>
+  );
+};
+
+SearchBooks.propTypes = {
+  searchBooks: array,
+  onHandleSearch: func,
+};
 
 export default SearchBooks;
