@@ -1,5 +1,5 @@
 import React from 'react';
-// import * as BooksAPI from './BooksAPI';
+import * as BooksAPI from './BooksAPI';
 import './App.css';
 import SearchBooks from './SearchBooks';
 import BookShelf from './BookShelf';
@@ -10,12 +10,42 @@ import {
 
 class BooksApp extends React.Component {
   state = {
-    shelfs: ["Currently Reading", "Want to Read", "Read"],
-    showSearchPage: false
+    shelfs: [
+      { 
+        name: "Currently Reading",
+        type: "currentlyReading",
+      }, 
+      { 
+        name: "Want to Read",
+        type: "wantToRead",
+      }, 
+      { 
+        name: "Read",
+        type: "read",
+      }
+    ],
+    books: [],
+  };
+
+  componentDidMount() {
+    BooksAPI.getAll().then((res) => {
+      this.setState(() => ({
+        books: res
+      }));
+    });
   }
 
+  handleUpdate = (book, shelf) => {
+    BooksAPI.update(book, shelf);
+    const books = this.state.books;
+    books[books.indexOf(book)].shelf = shelf;
+    this.setState(() => ({
+      "books": books
+    })); //To re-render the UI 
+  };
+
   render() {
-    const { shelfs } = this.state;
+    const { shelfs, books } = this.state;
     return (
       <div className="app">
         <Route exact path="/" render={() => (
@@ -26,7 +56,12 @@ class BooksApp extends React.Component {
             <div className="list-books-content">
               <div>
                 {shelfs.map( shelf => (
-                  <BookShelf shelfTitle={ shelf }/>
+                  <BookShelf 
+                    shelfTitle={shelf.name} 
+                    books={books.filter( book => book.shelf === shelf.type )}
+                    key={shelf.type}
+                    onHandleUpdate={this.handleUpdate}
+                  />
                 ))}
               </div>
               <div className="open-search">
