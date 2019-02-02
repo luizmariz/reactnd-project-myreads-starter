@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { func, object } from 'prop-types';
 
-class Book extends Component {
+class Book extends PureComponent {
   
   handleChange = event => {
     this.props.onUpdateShelf(this.props.book, event.target.value);

@@ -1,18 +1,30 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { func } from 'prop-types';
+import { debounce } from 'lodash';
 
 class SearchBooksBar extends Component {
-  state = {
-    query: "",
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      query: "",
+    };
 
+    this.searchQueryDebounced = debounce(this.searchQuery, 250 );
+  }
+  
   handleChange = event => {
-    let value = event.target.value;
-    this.props.onSearchQuery(value)
+    const value = event.target.value;
+
     this.setState(() => ({
       query: value,
-    }));
+    })); 
+
+    this.searchQueryDebounced(value);
+  }; //In this way, the user input value stay sync but the API request is right debounced
+
+  searchQuery = query => {
+    this.props.onSearchQuery(query);
   };
 
   render() {
@@ -22,7 +34,11 @@ class SearchBooksBar extends Component {
           <button className="close-search">Close</button>
         </Link>
         <div className="search-books-input-wrapper">
-          <input type="text" placeholder="Search by title or author" value={this.state.query} onChange={this.handleChange}/>
+          <input 
+            type="text" 
+            placeholder="Search by title or author" 
+            value={this.state.query} 
+            onChange={this.handleChange}/>
         </div>
       </div>
     );

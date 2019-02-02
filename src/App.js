@@ -29,54 +29,36 @@ class BooksApp extends Component {
     searchBooks: [],
   };
 
-  componentDidMount() {
-    BooksAPI.getAll().then((res) => {
-      this.setState(() => ({
-        books: res,
-      }));
-    });
+  async componentDidMount() {
+    const books = await BooksAPI.getAll();
+    this.setState(() => ({ books }));
   }
 
   handleUpdate = ( book, shelf ) => {
     BooksAPI.update(book, shelf);
 
-    let books = this.state.books;
-    let found = false;
+    book.shelf = shelf;
 
-    for ( let i = 0; i < books.length; i++) {
-      if (books[i].title === book.title) {
-        found = true;
-        books[i].shelf = shelf;
-        break;
-      }
-    } //If the book already exists in the array, we just need to update the book's shelf
-
-    if (!found) {
-      book.shelf = shelf;
-      books.push(book);
-    }//If no, we just need to add the book to the array in the correct shelf 
-
-    this.setState(() => ({
-      "books": books,
-    })); //To re-render the UI 
+    this.setState((prev) => ({
+      "books": prev.books.filter( b => b.id !== book.id).concat(book)
+    })); 
   };
 
-  handleSearch = query => {
-    BooksAPI.search(query.trim()).then((res) => { //It's important to trim the query so it will search the right string
-      let books = Array.isArray(res) ? res.map( book => ({ ...book, shelf: "none"})) : [];
-      for (let i = 0; i < books.length; i++) {
-        for (let j = 0; j < this.state.books.length; j++) {
-          if (books[i].title === this.state.books[j].title) {
-            books[i].shelf = this.state.books[j].shelf;
-          } 
-        }
-      } //A very simple way to check if the book is already in a shelf and set it to the right shelf
+  handleSearch = async query => {
+    const books = await BooksAPI.search(query.trim()) //It's important to trim the query so it will search the right string
 
-      this.setState(() => ({
-        searchBooks: books,
-      }))
+    this.setState(() => ({
+      searchBooks: Array.isArray(books) ? this.setBooksShelf(books) : []
+    }))
+  };
 
-    });
+  setBooksShelf = books => {
+    const booksInShelfs = this.state.books;
+
+    return books.map( book => {
+      booksInShelfs.forEach( b => book.shelf = b.id === book.id ? b.shelf : "none");
+      return book;
+    }); //A very simple way to check if the book is already in a shelf and set it to the right shelf
   };
 
   render() {
