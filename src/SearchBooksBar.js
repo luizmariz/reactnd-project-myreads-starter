@@ -9,10 +9,10 @@ class SearchBooksBar extends Component {
 
   handleChange = event => {
     let value = event.target.value;
+    this.props.onSearchQuery(value)
     this.setState(() => ({
       query: value,
     }));
-    this.props.onSearchQuery(value);
   };
 
   render() {

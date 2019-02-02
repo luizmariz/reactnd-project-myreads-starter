@@ -54,7 +54,7 @@ class BooksApp extends Component {
     if (!found) {
       book.shelf = shelf;
       books.push(book);
-    }//If no, we just need to add the book to the array if the correct shelf 
+    }//If no, we just need to add the book to the array in the correct shelf 
 
     this.setState(() => ({
       "books": books,
@@ -62,28 +62,23 @@ class BooksApp extends Component {
   };
 
   handleSearch = query => {
-    if (query !== "") {
-      BooksAPI.search(query).then((res) => {
-        let books = Array.isArray(res) ? res.map( book => ({ ...book, shelf: "none"})) : [];
-        
-        for (let i = 0; i < books.length; i++) {
-          for (let j = 0; j < this.state.books.length; j++) {
-            if (books[i].title === this.state.books[j].title) {
-              books[i].shelf = this.state.books[j].shelf;
-            } 
-          }
-        } //A very simple way to check if the book is already in a shelf and set it
 
-        this.setState(() => ({
-          searchBooks: books,
-        }));
+    BooksAPI.search(query.trim()).then((res) => { //It's important to trim the query so it will search the right string
+      console.log(query);
+      let books = Array.isArray(res) ? res.map( book => ({ ...book, shelf: "none"})) : [];
+      for (let i = 0; i < books.length; i++) {
+        for (let j = 0; j < this.state.books.length; j++) {
+          if (books[i].title === this.state.books[j].title) {
+            books[i].shelf = this.state.books[j].shelf;
+          } 
+        }
+      } //A very simple way to check if the book is already in a shelf and set it to the right shelf
 
-      });
-    }else {
       this.setState(() => ({
-        searchBooks: [],
-      }));
-    }
+        searchBooks: books,
+      }))
+
+    });
   };
 
   render() {

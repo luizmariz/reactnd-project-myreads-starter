@@ -16,12 +16,14 @@ body, .app {
   padding: 10px 0;
   background: #2e7c31;
   text-align: center;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 0 6px rgba(0,0,0,0.23);
 }
 
 .list-books-title h1 {
   font-weight: 400;
   margin: 0;
   color: white;
+  font-family: 'Noto Serif SC';
 }
 
 .list-books-content {
@@ -41,6 +43,7 @@ body, .app {
 
 .bookshelf-title {
   border-bottom: 1px solid #dedede;
+  color: #2a412f;
 }
 
 .bookshelf-books {
@@ -196,3 +199,7 @@ button:active {
   text-align: center;
   font-size: 0.8em;
 }
+
+@import url('https://fonts.googleapis.com/css?family=Noto+Serif+SC');
+
+
