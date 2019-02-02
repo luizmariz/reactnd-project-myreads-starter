@@ -63,7 +63,6 @@ class BooksApp extends Component {
 
   handleSearch = query => {
     BooksAPI.search(query.trim()).then((res) => { //It's important to trim the query so it will search the right string
-      console.log(query);
       let books = Array.isArray(res) ? res.map( book => ({ ...book, shelf: "none"})) : [];
       for (let i = 0; i < books.length; i++) {
         for (let j = 0; j < this.state.books.length; j++) {
